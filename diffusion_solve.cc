@@ -55,6 +55,9 @@ int main(int argc, char *argv[]) {
 
   //output to file
   T->WriteToFile("T_out.txt");
+  double mean_temp=T->GetMean();
+  printf("The mean temperature for nside=%4d is: %8.4f \n", nside, mean_temp);
+
   delete T;
   delete integrator;
   delete model;

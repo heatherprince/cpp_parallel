@@ -46,7 +46,14 @@ int Grid::Set(int i, int j, double val){
 double Grid::GetMean()const {
   //check i, i in correct range
   //calculate mean temp
-  return 0.;
+  double sum=0;
+  for(int j=0; j<dimen_y_; j++){
+    for(int i=0; i<dimen_x_; i++){
+      sum+=grid_[j][i];
+    }
+  }
+  double mean=sum/(dimen_x_*dimen_y_);
+  return mean;
 }
 
 int Grid::InitializeTEdges(){
