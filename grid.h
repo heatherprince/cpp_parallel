@@ -6,12 +6,14 @@ class Grid{
  public:
   Grid(int nside_x, int nside_y, double x_max, double y_max);
   ~Grid();
-  double Get(int i, int j);
+  double Get(int i, int j) const;
   int Set(int i, int j, double val);
   int InitializeTEdges();
   int MultiplyByConstant(double c);
   int AddGridTimesConst(double c, Grid &grid2);
-  int GradSq(Grid &grad_sq_T);
+  int GradSq(Grid &grad_sq_T) const;
+  double GetMean() const;
+  int WriteToFile(char *fname) const;
  private:
   const int dimen_x_;                     // dimension of x axis
   const int dimen_y_;                     // dimension of y axis

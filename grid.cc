@@ -32,7 +32,7 @@ Grid::~Grid() {
 }
 
 //i is x index, j is y index
-double Grid::Get(int i, int j){
+double Grid::Get(int i, int j)const {
   //check i, i in correct range
   return grid_[j][i];
 }
@@ -41,6 +41,12 @@ int Grid::Set(int i, int j, double val){
   //check i, i in correct range
   grid_[j][i]=val;
   return 0;
+}
+
+double Grid::GetMean()const {
+  //check i, i in correct range
+  //calculate mean temp
+  return 0.;
 }
 
 int Grid::InitializeTEdges(){
@@ -70,7 +76,7 @@ int Grid::AddGridTimesConst(double c, Grid &grid2){
   return 0;
 }
 
-int Grid::GradSq(Grid &grad_sq_T) {
+int Grid::GradSq(Grid &grad_sq_T)const  {
   double f;
   for(int j=0; j<dimen_y_; j++){
     for(int i=0; i<dimen_x_; i++){
@@ -98,6 +104,17 @@ int Grid::GradSq(Grid &grad_sq_T) {
       grad_sq_T.Set(i,j,f);
     }
   }
+  return 0;
+}
 
+
+int Grid::WriteToFile(char *fname) const{
+  FILE *f_out=fopen(fname,"w");
+  for(int j=0; j<dimen_y_; j++){
+    for(int i=0; i<dimen_x_; i++){
+      fprintf(f_out, "%15.8f", grid_[j][i]);
+    }
+    fprintf(f_out, "\n");
+  }
   return 0;
 }

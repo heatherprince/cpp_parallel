@@ -26,6 +26,8 @@ int main(int argc, char *argv[]) {
 
   T->InitializeTEdges();
 
+  T->WriteToFile("file.txt");
+
   for(int j=0; j<nside; j++){
     for(int i=0; i<nside; i++){
       printf("T bound i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
