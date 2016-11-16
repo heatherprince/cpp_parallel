@@ -1,15 +1,21 @@
 integrators = euler.o
 equations = diffusion.o
-datatypes = grid.o
-objects = diffusion_solve.o $(integrators) $(equations) $(datatypes)
-test_grid_objects = test_grid.o $(datatypes)
+datatypes_serial = grid.o
+datatypes_omp = grid_omp.o
+objects = diffusion_solve.o $(integrators) $(equations) $(datatypes_serial)
+objects_omp = diffusion_solve.o $(integrators) $(equations) $(datatypes_omp)
+test_grid_objects = test_grid.o $(datatypes_serial)
 
-CXXFLAGS = -g -Wall
+CXX=g++-6
+CXXFLAGS = -g -Wall -fopenmp
 
-all: heat_serial test_grid
+all: heat_serial heat_omp test_grid
 
 heat_serial : $(objects)
 	$(CXX) -o $@ $^
+
+heat_omp : $(objects_omp)
+	$(CXX) -fopenmp -o $@ $^
 
 test_grid : $(test_grid_objects)
 		$(CXX) -o $@ $^

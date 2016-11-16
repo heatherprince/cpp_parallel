@@ -8,7 +8,7 @@
 #include "euler.h"
 //grid
 #include "grid.h"
-
+#include <ctime>
 
 
 
@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
     printf("USAGE: %s <nx> \n", argv[0]);
     exit(1);
   }
+  time_t start = time(nullptr);
 
   const int nside = atoi(argv[1]);  //check that it is an int
 
@@ -46,20 +47,33 @@ int main(int argc, char *argv[]) {
 
   Integrator *integrator = new Euler(dt, *model);
 
+  time_t start_integration = time(nullptr);
   double t = 0;
   for (int i = 0; i < nsteps; ++i) {
     integrator->Step(t, *T);
     T->InitializeTEdges(); //maintain BC
     t = (i+1) * dt;
   }
+  time_t end_integration = time(nullptr);
 
   //output to file
-  T->WriteToFile("T_out.txt");
+  char filename[] = "T_out.txt";
+  T->WriteToFile(filename);
   double mean_temp=T->GetMean();
   printf("The mean temperature for nside=%4d is: %8.4f \n", nside, mean_temp);
 
   delete T;
   delete integrator;
   delete model;
+
+  time_t end = time(nullptr);
+
+  double time_s=difftime(end,start);
+
+  double time_integration_s=difftime(end_integration,start_integration);
+
+  printf("Time elapsed running main of diffusion_solve is: %8.2f seconds \n", time_s);
+  printf("Time elapsed integrating the diffusion equation is: %8.2f seconds \n", time_integration_s);
+
   return 0;
 }

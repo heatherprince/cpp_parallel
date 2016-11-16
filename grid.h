@@ -1,6 +1,7 @@
 #ifndef GRID_H_
 #define GRID_H_
 
+
 //2D grid
 class Grid{
  public:

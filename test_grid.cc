@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string>
 #include <math.h>
-
+#include <ctime>
 #include "grid.h"
 
 int main(int argc, char *argv[]) {
@@ -11,12 +10,18 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  time_t start = time(nullptr);
+
   const int nside = atoi(argv[1]);  //check that it is an int
 
   double x_max=M_PI;
   double kappa=100.;
 
+
+
   Grid *T=new Grid(nside, nside, x_max, x_max); //initializes grid to zero
+
+
 
   for(int j=0; j<nside; j++){
     for(int i=0; i<nside; i++){
@@ -26,7 +31,8 @@ int main(int argc, char *argv[]) {
 
   T->InitializeTEdges();
 
-  T->WriteToFile("file.txt");
+  char filename[] = "file.txt";
+  T->WriteToFile(filename);
 
   for(int j=0; j<nside; j++){
     for(int i=0; i<nside; i++){
@@ -59,6 +65,13 @@ int main(int argc, char *argv[]) {
 
   delete T;
   delete gradsq;
+
+
+  time_t end = time(nullptr);
+
+  double time_s=difftime(end,start);
+
+  printf("Time elapsed running main of test_grid is: %8.2f seconds \n", time_s);
 
   return 0;
 }
