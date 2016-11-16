@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  time_t start = time(nullptr);
+  time_t start = time(NULL);
 
   const int nside = atoi(argv[1]);  //check that it is an int
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
   delete gradsq;
 
 
-  time_t end = time(nullptr);
+  time_t end = time(NULL);
 
   double time_s=difftime(end,start);
 

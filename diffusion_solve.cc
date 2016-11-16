@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     printf("USAGE: %s <nx> \n", argv[0]);
     exit(1);
   }
-  time_t start = time(nullptr);
+  time_t start = time(NULL);
 
   const int nside = atoi(argv[1]);  //check that it is an int
 
@@ -47,14 +47,14 @@ int main(int argc, char *argv[]) {
 
   Integrator *integrator = new Euler(dt, *model);
 
-  time_t start_integration = time(nullptr);
+  time_t start_integration = time(NULL);
   double t = 0;
   for (int i = 0; i < nsteps; ++i) {
     integrator->Step(t, *T);
     T->InitializeTEdges(); //maintain BC
     t = (i+1) * dt;
   }
-  time_t end_integration = time(nullptr);
+  time_t end_integration = time(NULL);
 
   //output to file
   char filename[] = "T_out.txt";
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   delete integrator;
   delete model;
 
-  time_t end = time(nullptr);
+  time_t end = time(NULL);
 
   double time_s=difftime(end,start);
 
