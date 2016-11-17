@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
   double dt=t_max/nsteps;
 
-  Model *model=new Diffusion(kappa, nside, x_max);
+  Model *model=new Diffusion(kappa, nside, nside);
 
   //const int dimen = model->dimen();
 

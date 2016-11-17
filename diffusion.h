@@ -7,14 +7,15 @@
 // implement on 2D grid
 class Diffusion : public Model {
  public:
-  Diffusion(double kappa, int nside, int xmax); //assumes that x and y both have same maximum xmax and same number of divisions nside
+  Diffusion(double kappa, int nside_x, int nside_y); //assumes that x and y both have same maximum xmax and same number of divisions nside
   ~Diffusion();
   int rhs(double t, const Grid &T, Grid &fx) const;   //T should be const, figure out how
-  int dimen() const { return nside_; }
+  int dimen_() const { return nside_x_; }
+  int dimen_y_() const { return nside_y_; }
  private:
   const double kappa_;
-  const double nside_;    //grid size is nside^2
-  const double xmax_;
+  const int nside_x_;
+  const int nside_y_;
 };
 
 #endif  // DIFFUSION_H_

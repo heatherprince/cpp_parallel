@@ -9,7 +9,9 @@ class Model {
   virtual int rhs(double t, const Grid &x, Grid &fx) const = 0; //x should be const, figure out how
 
   // number of states (size of x)
-  virtual int dimen() const = 0;
+  virtual int dimen_() const = 0;
+  //if 2D num states in second dimension
+  virtual int dimen_y_() const = 0;
 };
 
 #endif  // MODEL_H_

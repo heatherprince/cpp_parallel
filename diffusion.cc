@@ -3,14 +3,15 @@
 #include <math.h>
 
 //xmax and ymax to get dx, dy
-Diffusion::Diffusion(double kappa, int nside, int xmax)
+Diffusion::Diffusion(double kappa, int nside_x, int nside_y)
     : kappa_(kappa),
-      nside_(nside),
-      xmax_(xmax){
+      nside_x_(nside_x),
+      nside_y_(nside_y){
 }
 
 Diffusion::~Diffusion(){
 }
+
 
 int Diffusion::rhs(double t, const Grid &T, Grid &fx) const {   //T should be const, figure out how
   T.GradSq(fx); //check usage, should result in fx being grad sq T
