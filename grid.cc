@@ -60,7 +60,7 @@ int Grid::InitializeTEdges(){
   for(int i=0; i<dimen_x_; i++){
     double x=i*dx_;
     grid_[0][i]=cos(x)*cos(x);
-    grid_[dimen_x_-1][i]=sin(x)*sin(x);
+    grid_[dimen_y_-1][i]=sin(x)*sin(x);
   }
   return 0;
 }
