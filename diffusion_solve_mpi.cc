@@ -56,8 +56,10 @@ int main(int argc, char *argv[]) {
 
   //divide up x's between ranks
   int nside_x=nside/size+2; //check if it goes in exactly! //divide equally then give an extra column on each side
-  double my_x_min=my_rank*(x_max/size)-dx;
-  double my_x_max=(my_rank+1)*(x_max/size);
+  double my_x_min=dx*(my_rank*nside/size - 1);  //first rank will have xmin negative, ok because BC cos^2, sin^2 periodic
+  double my_x_max=dx*((my_rank+1)*nside/size);  //last rank will have xmax larger than pi, ok because BC cos^2, sin^2 periodic
+
+  printf("I am process %3d with xmin %5.2f, xmax %5.2f, and nside_x %d\n", my_rank, my_x_min, my_x_max, nside_x);
 
   int nside_y=nside;
   double my_y_min=0.;
