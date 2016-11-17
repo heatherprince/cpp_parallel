@@ -122,7 +122,8 @@ int Grid::GradSq(Grid &grad_sq_T)const  {
       } else if(j==dimen_y_-1){
         f= (grid_[j][i-1]+grid_[j][i+1]+grid_[j-1][i]-3*grid_[j][i])/(dx_*dx_);
       }
-
+      printf("gradT i: %4d, j: %4d, T: %5.2f \n",i,j,f);      
+      printf("dx=%5.2f\n", dx_);
       grad_sq_T.Set(i,j,f);
     }
   }

@@ -51,9 +51,8 @@ int main(int argc, char *argv[]) {
   if (my_rank == 0) prev = size - 1;
   if (my_rank == (size - 1)) next = 0;
 
-  printf("I am process %3d with neighbours %3d and %3d", my_rank, prev, next);
+  printf("I am process %3d with neighbours %3d and %3d\n", my_rank, prev, next);
 
-  Model *model=new Diffusion(kappa, nside, x_max);
 
   //divide up x's between ranks
   int nside_x=nside/size+2; //check if it goes in exactly! //divide equally then give an extra column on each side
@@ -63,10 +62,16 @@ int main(int argc, char *argv[]) {
   int nside_y=nside;
   double my_y_min=0.;
   double my_y_max=x_max;
-
+  Model *model=new Diffusion(kappa, nside_x, nside_y);
   Grid *T=new Grid(nside_x, nside_y, my_x_min, my_x_max, my_y_min, my_y_max); //initializes grid to zero
   T->InitializeTEdges();                         //boundary conditions: cos^2(x) and sin^2(x) at opposite edges
-
+  if (my_rank==root_process){
+    for(int i=0; i<nside_x; i++){
+      for(int j=0; j<nside_y; j++){
+      printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
+      }
+    }
+  }
   Integrator *integrator = new Euler(dt, *model);
 
   double t = 0;
@@ -80,7 +85,13 @@ int main(int argc, char *argv[]) {
     //done passing end columns
     t = (i+1) * dt;
   }
-
+  if (my_rank==root_process){
+    for(int i=0; i<nside_x; i++){
+      for(int j=0; j<nside_y; j++){
+      printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
+      }
+    }
+  }
   if (my_rank==root_process){
     //T_full=new full T grid with data from all nodes
     char filename[] = "T_out.txt";
@@ -88,6 +99,9 @@ int main(int argc, char *argv[]) {
     T->WriteToFile(filename);
   }
   double my_mean_temp=T->GetMean();
+  if (my_rank==root_process){
+    printf("The mean temperature for the root process for nside=%4d is: %8.4f \n", nside, my_mean_temp);
+  }
   //sum across all processes
   MPI_Reduce(&my_mean_temp, &mean_temp, 1, MPI_DOUBLE, MPI_SUM, root_process, MPI_COMM_WORLD);
   //reduction --> get mean of all different nodes and get master to write it
