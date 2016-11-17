@@ -8,7 +8,7 @@
 //solver
 #include "euler.h"
 //grid
-#include "grid.h"
+#include "grid_mpi.h"
 
 
 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
   //choose dt less than dx^2/4kappa, but must divide into tmax exactly
   const int nsteps=2*2*nside*nside; //minumum nsteps is 2N^2 from def of t_max, put in more steps to be safe
   const double dt=t_max/nsteps;
-  const double dx=xmax/(nside-1);
+  const double dx=x_max/(nside-1);
 
   int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
   double mean_temp;
@@ -51,20 +51,20 @@ int main(int argc, char *argv[]) {
   if (my_rank == 0) prev = size - 1;
   if (my_rank == (size - 1)) next = 0;
 
-  printf("I am process %3d with neighbours %3d and %3d", my_rank, previous, next)
+  printf("I am process %3d with neighbours %3d and %3d", my_rank, prev, next);
 
   Model *model=new Diffusion(kappa, nside, x_max);
 
   //divide up x's between ranks
   int nside_x=nside/size+2; //check if it goes in exactly! //divide equally then give an extra column on each side
-  double my_x_min=rank*(xmax/size)-dx;
-  double my_x_max=(rank+1)*(xmax/size);
+  double my_x_min=my_rank*(x_max/size)-dx;
+  double my_x_max=(my_rank+1)*(x_max/size);
 
   int nside_y=nside;
-  double y_min=0.;
-  double y_max=x_max;
+  double my_y_min=0.;
+  double my_y_max=x_max;
 
-  Grid *T=new Grid(nside_x, nside_y, my_x_min, my_x_max, ymin, y_max); //initializes grid to zero
+  Grid *T=new Grid(nside_x, nside_y, my_x_min, my_x_max, my_y_min, my_y_max); //initializes grid to zero
   T->InitializeTEdges();                         //boundary conditions: cos^2(x) and sin^2(x) at opposite edges
 
   Integrator *integrator = new Euler(dt, *model);
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
     //T_full=new full T grid with data from all nodes
     char filename[] = "T_out.txt";
     //T_full->WriteToFile(filename);
-    T_full->WriteToFile(filename);
+    T->WriteToFile(filename);
   }
   double my_mean_temp=T->GetMean();
   //sum across all processes

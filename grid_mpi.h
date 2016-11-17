@@ -8,9 +8,9 @@ class Grid{
   Grid(int nside_x, int nside_y, double x_min, double y_min,  double x_max, double y_max);
   ~Grid();
   double Get(int i, int j) const;                  //returns value at x index i, y index j
-  int Grid::GetYColumn(int i, double *val)const;   //sets val to point to y column at x index i
+  int GetYColumn(int i, double *val)const;   //sets val to point to y column at x index i
   int Set(int i, int j, double val);               //sets value at x index i, y index j to val
-  int Grid::SetYColumn(int i, const double *val);  //sets y column at x index i to val
+  int SetYColumn(int i, double *val);  //sets y column at x index i to val
   int InitializeTEdges();                          //initializes y=0 to cos^2(x), y=pi to sin^2(x)
   int MultiplyByConstant(double c);
   int AddGridTimesConst(double c, Grid &grid2);

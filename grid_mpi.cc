@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <math.h>
-#include "grid.h"
+#include "grid_mpi.h"
 
 //implementation of Euler that works on a square grid
 Grid::Grid(int nside_x, int nside_y, double x_min, double y_min, double x_max, double y_max)
@@ -39,7 +39,7 @@ double Grid::Get(int i, int j)const {
   return grid_[i][j];
 }
 
-int Grid::SetYColumn(int i, const double *val){
+int Grid::SetYColumn(int i, double *val){
   //check i, i in correct range
   grid_[i]=val;
   return 0;
@@ -48,8 +48,8 @@ int Grid::SetYColumn(int i, const double *val){
 //i is x index, j is y index
 int Grid::GetYColumn(int i, double *val)const {  //sets val to column
   //check i, i in correct range
-  val=grid_[i]
-  return 0];
+  val=grid_[i];
+  return 0;
 }
 
 int Grid::Set(int i, int j, double val){
@@ -73,7 +73,7 @@ double Grid::GetMean()const {
 
 int Grid::InitializeTEdges(){
   for(int i=0; i<dimen_x_; i++){
-    double x=i*dx_+x_min;
+    double x=i*dx_+min_x_;
     grid_[i][0]=cos(x)*cos(x);
     grid_[i][dimen_y_-1]=sin(x)*sin(x);
   }
