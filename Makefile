@@ -9,15 +9,22 @@ test_grid_objects = test_grid.o $(datatypes)
 
 CXX=icpc
 CXXFLAGS = -g -Wall
+heat_omp: module load intel
 heat_omp: CXXFLAGS = -g -Wall -qopenmp
+heat_mpi: module load openmpi/intel-16.0 intel/16.0
+heat_mpi: CXX=mpic++
 
-all: heat_serial heat_omp test_grid
+
+all: heat_serial heat_omp heat_mpi test_grid
 
 heat_serial : $(objects)
 	$(CXX) -o $@ $^
 
 heat_omp : $(objects_omp)
 	$(CXX) -qopenmp -o $@ $^
+
+heat_mpi : $(objects_mpi)
+		$(CXX) -o $@ $^
 
 test_grid : $(test_grid_objects)
 		$(CXX) -o $@ $^
