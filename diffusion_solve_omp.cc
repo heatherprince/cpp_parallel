@@ -4,6 +4,7 @@
 #include <math.h>
 #include <ctime>
 #include <sstream>
+#include <omp.h>
 //differential equation
 #include "diffusion.h"
 //solver
@@ -15,13 +16,15 @@
 
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
-    printf("USAGE: %s <nx> \n", argv[0]);
+  if (argc != 3) {
+    printf("USAGE: %s <nx> <nthreads> \n", argv[0]);
     exit(1);
   }
   time_t start = time(NULL);
 
   const int nside = atoi(argv[1]);  //check that it is an int
+  const int nthreads= atoi(argv[2]);
+  omp_set_num_threads(nthreads);
 
   double x_max=M_PI;
   double kappa=1.;  //what should this be? does it matter?
@@ -50,7 +53,7 @@ int main(int argc, char *argv[]) {
 
   //output to file
   std::stringstream filename;
-  filename << "OutputDatafiles/T_out_nside"<<nside<<"_serial.txt";
+  filename << "OutputDatafiles/T_out_nside"<<nside<<"_omp_nthreads"<<nthreads<<".txt";
   T->WriteToFile(filename.str().c_str());
 
 
