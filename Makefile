@@ -9,22 +9,25 @@ test_grid_objects = test_grid.o $(datatypes)
 
 CXX=icpc
 CXXFLAGS = -g -Wall
-heat_omp: module load intel
+export SHELL:=/bin/bash
+
 heat_omp: CXXFLAGS = -g -Wall -qopenmp
-heat_mpi: module load openmpi/intel-16.0 intel/16.0
+
 heat_mpi: CXX=mpic++
 
-
-all: heat_serial heat_omp heat_mpi test_grid
+all: heat_serial heat_omp heat_mpi
 
 heat_serial : $(objects)
-	$(CXX) -o $@ $^
+	. /usr/share/Modules/init/bash; module load intel/16.0; $(CXX) -o $@ $^
 
 heat_omp : $(objects_omp)
+	. /usr/share/Modules/init/bash; module load intel/16.0; \
 	$(CXX) -qopenmp -o $@ $^
 
+
 heat_mpi : $(objects_mpi)
-		$(CXX) -o $@ $^
+	. /usr/share/Modules/init/bash; module load openmpi/intel-16.0 intel/16.0; \
+	$(CXX) -o $@ $^
 
 test_grid : $(test_grid_objects)
 		$(CXX) -o $@ $^
@@ -34,6 +37,7 @@ clean:
 	$(RM) .depend
 
 depend:
+	. /usr/share/Modules/init/bash; module load openmpi/intel-16.0 intel/16.0; \
 	$(CXX) -MM $(CXXFLAGS) *.cc > .depend
 
 -include .depend
