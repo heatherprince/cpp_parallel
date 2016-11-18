@@ -47,6 +47,7 @@ int Grid::Set(int i, int j, double val){
 
 int Grid::SetYColumn(int i, double *val){
   //check i, i in correct range
+  #pragma omp parallel for default(none) shared(val, i)
   for(int j=0; j<dimen_y_; j++){
     grid_[i][j]=val[j];
   }
@@ -56,6 +57,7 @@ int Grid::SetYColumn(int i, double *val){
 //i is x index, j is y index
 int Grid::GetYColumn(int i, double *val)const {  //sets val to column
   //check i, i in correct range
+  #pragma omp parallel for default(none) shared(val, i)
   for(int j=0; j<dimen_y_; j++){
     val[j]=grid_[i][j];
   }
