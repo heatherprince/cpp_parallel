@@ -1,0 +1,22 @@
+#!/bin/bash
+# Parallel job using 8 processors:
+#SBATCH -N 1			# number of nodes
+#SBATCH --ntasks-per-node=8	# processors per node
+#SBATCH -t 0:15:00		# max runtime
+#SBATCH --mail-type=begin	# email at start
+#SBATCH --mail-type=end		# and end
+#SBATCH --mail-type=fail	# and in case of failure
+#SBATCH --mail-user=heatherp@princeton.edu
+
+# Load openmpi environment
+module load openmpi/intel-16.0 intel/16.0
+
+# Make sure you are in the correct directory
+cd ~/cpp_parallel/
+
+for nx in 128 256 512
+do
+    ./heat_omp $nx 8 > heat_omp.$nx.8.out
+    srun ./heat_mpi $nx > heat_mpi.$nx.8.out
+done
+
