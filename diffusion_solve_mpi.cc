@@ -29,8 +29,15 @@ int main(int argc, char *argv[]) {
   const double dt=t_max/nsteps;
   const double dx=x_max/(nside-1);
 
-  int my_rank, size, prev, next, buf[2], tag1=1, tag2=2, root_process=0;
+  int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
   double mean_temp;
+
+
+  double *col_for_prev=new double[nside];
+  double *col_for_next=new double[nside];
+  double *col_from_prev=new double[nside];
+  double *col_from_next=new double[nside];
+
 
 
 
@@ -82,15 +89,22 @@ int main(int argc, char *argv[]) {
     //pass edge columns in ring formation
     T->InitializeTEdges(); //maintain BC : cos^2(x) and sin^2(x) at opposite edges
 
-    //pass end columns in a ring topology
-    MPI_Irecv(&buf[0], 1, MPI_INT, prev, tag1, MPI_COMM_WORLD, &reqs[0]);
-    MPI_Irecv(&buf[1], 1, MPI_INT, next, tag2, MPI_COMM_WORLD, &reqs[1]);
-    MPI_Isend(&my_rank, 1, MPI_INT, prev, tag2, MPI_COMM_WORLD, &reqs[2]);
-    MPI_Isend(&my_rank, 1, MPI_INT, next, tag1, MPI_COMM_WORLD, &reqs[3]);
+    //get end columns to pass to previous and next processes
+    T->GetYColumn(1, col_for_prev); //first column apart from border
+    T->GetYColumn(nside_x-2, col_for_next); //last column before border
+
+    //pass end columns in a ring topology: col_for_prev is sent to col_from_next of previous processor, col_for_next to col_from_prev of next processor
+    MPI_Irecv(col_from_prev, nside_y, MPI_DOUBLE, prev, tag1, MPI_COMM_WORLD, &reqs[0]);
+    MPI_Irecv(col_from_next, nside_y, MPI_DOUBLE, next, tag2, MPI_COMM_WORLD, &reqs[1]);
+    MPI_Isend(col_for_prev, nside_y, MPI_DOUBLE, prev, tag2, MPI_COMM_WORLD, &reqs[2]);
+    MPI_Isend(col_for_next, nside_y, MPI_DOUBLE, next, tag1, MPI_COMM_WORLD, &reqs[3]);
     MPI_Waitall(4, reqs, stats);
 
-    printf("I am process %3d and I received from rank %d and rank %d\n", my_rank, buf[0], buf[1]);
+    //put columns received in border
+    T->SetYColumn(0, col_from_prev);
+    T->SetYColumn(nside_x-1, col_from_next);
 
+    printf("Time iteration %d out of %d: process %3d sent and updated end columns \n", i, nsteps, my_rank);
     //done passing end columns
     t = (i+1) * dt;
   }
