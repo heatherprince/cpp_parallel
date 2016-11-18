@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
   mean_temp/=size;
   //reduction --> get mean of all different nodes and get master to write it
   if (my_rank==root_process){
-    printf("The mean temperature for nside=%4d is: %8.4f \n", nside, mean_temp);
+    printf("The mean temperature for nside=%4d is: %14.10f \n", nside, mean_temp);
   }
 
   delete T;
