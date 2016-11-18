@@ -3,13 +3,13 @@ equations = diffusion.o
 datatypes = grid.o
 objects_mpi = diffusion_solve_mpi.o $(integrators) $(equations) $(datatypes)
 
-CXX=mpic++
-CXXFLAGS = -g -Wall -fopenmp
+CXX=mpicxx
+CXXFLAGS = -g -Wall
 
 all: heat_mpi
 
 heat_mpi : $(objects_mpi)
-	$(MPICXX) -o $@ $^
+	$(CXX) -o $@ $^
 
 clean:
 	$(RM) *.o
