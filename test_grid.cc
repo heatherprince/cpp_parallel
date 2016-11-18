@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctime>
-#include "grid_mpi.h"
+#include "grid.h"
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {

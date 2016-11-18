@@ -14,7 +14,7 @@ Diffusion::~Diffusion(){
 
 
 int Diffusion::rhs(double t, const Grid &T, Grid &fx) const {   //T should be const, figure out how
-  T.GradSq(fx); //check usage, should result in fx being grad sq T
+  T.GradSq(fx); 
   fx.MultiplyByConstant(kappa_); // set fx to kappa*grad^2 T
   return 0;
 }

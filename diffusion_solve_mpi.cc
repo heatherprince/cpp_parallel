@@ -9,7 +9,7 @@
 //solver
 #include "euler.h"
 //grid
-#include "grid_mpi.h"
+#include "grid.h"
 
 
 
@@ -20,6 +20,12 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  MPI_Init (&argc, &argv); //initialize MPI library
+  MPI_Comm_size(MPI_COMM_WORLD, &size); //get number of processes
+  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank); //get my process id
+
+  double t1, t2;
+  t1 = MPI_Wtime();
 
   const int nside = atoi(argv[1]);  //check that it is an int
   const double x_max=M_PI;
@@ -29,60 +35,36 @@ int main(int argc, char *argv[]) {
   const int nsteps=2*2*nside*nside; //minumum nsteps is 2N^2 from def of t_max, put in more steps to be safe
   const double dt=t_max/nsteps;
   const double dx=x_max/(nside-1);
-
-  int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
   double mean_temp;
 
+  int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
 
   double *col_for_prev=new double[nside];
   double *col_for_next=new double[nside];
   double *col_from_prev=new double[nside];
   double *col_from_next=new double[nside];
 
-
-
-
   MPI_Request reqs[4];
   MPI_Status stats[4];
-
-  MPI_Init (&argc, &argv); //initialize MPI library
-  MPI_Comm_size(MPI_COMM_WORLD, &size); //get number of processes
-  MPI_Comm_rank(MPI_COMM_WORLD, &my_rank); //get my process id
-
-  double t1, t2;
-  t1 = MPI_Wtime();
-
-
 
   prev = my_rank-1;
   next = my_rank+1;
   if (my_rank == 0) prev = size - 1;
   if (my_rank == (size - 1)) next = 0;
 
-  printf("I am process %3d with neighbours %3d and %3d\n", my_rank, prev, next);
-
-
   //divide up x's between ranks
-  int nside_x=nside/size+2; //check if it goes in exactly! //divide equally then give an extra column on each side
+  int nside_x=nside/size+2;  //divide equally then give an extra column on each side
   double my_x_min=dx*(my_rank*nside/size - 1);  //first rank will have xmin negative, ok because BC cos^2, sin^2 periodic
   double my_x_max=dx*((my_rank+1)*nside/size);  //last rank will have xmax larger than pi, ok because BC cos^2, sin^2 periodic
-
-  printf("I am process %3d with xmin %5.2f, xmax %5.2f, and nside_x %d\n", my_rank, my_x_min, my_x_max, nside_x);
 
   int nside_y=nside;
   double my_y_min=0.;
   double my_y_max=x_max;
   Model *model=new Diffusion(kappa, nside_x, nside_y);
+  Integrator *integrator = new Euler(dt, *model);
+
   Grid *T=new Grid(nside_x, nside_y, my_x_min, my_y_min,  my_x_max, my_y_max); //initializes grid to zero
   T->InitializeTEdges();                         //boundary conditions: cos^2(x) and sin^2(x) at opposite edges
-  //if (my_rank==root_process){
-  //  for(int i=0; i<nside_x; i++){
-  //    for(int j=0; j<nside_y; j++){
-  //    printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
-  //    }
-  //  }
-  //}
-  Integrator *integrator = new Euler(dt, *model);
 
   double t = 0;
   for (int i = 0; i < nsteps; ++i) {
@@ -104,31 +86,17 @@ int main(int argc, char *argv[]) {
     //put columns received in border
     T->SetYColumn(0, col_from_prev);
     T->SetYColumn(nside_x-1, col_from_next);
-
-    //printf("Time iteration %d out of %d: process %3d sent and updated end columns \n", i, nsteps, my_rank);
     //done passing end columns
     t = (i+1) * dt;
   }
-  //if (my_rank==root_process){
-  //  for(int i=0; i<nside_x; i++){
-  //    for(int j=0; j<nside_y; j++){
-  //    printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
-  //    }
-  //  }
-  //}
-  //if (my_rank==root_process){
-    //T_full=new full T grid with data from all nodes
-    //char filename[] = "T_out.txt";
-    //T_full->WriteToFile(filename);
-    //T->WriteToFile(filename);
-  //}
+
   //I decided to write my files separately so that I could check that the border column swop was working
   //and also because I know that I can combine them really easily in Python using numpy before plotting
   //but if I had more time I would use MPI_IO to write to the same file from each process
   std::stringstream filename;
-
   filename << "OutputDatafiles/T_out_nside"<<nside<<"_process" << my_rank  <<  "_numproc" << size << ".txt";
   T->WriteToFile(filename.str().c_str());
+
   double my_mean_temp=T->GetMeanExcludeBorders();
   if (my_rank==root_process){
     printf("The mean temperature for the root process for nside=%4d is: %8.4f \n", nside, my_mean_temp);
@@ -144,6 +112,7 @@ int main(int argc, char *argv[]) {
   delete T;
   delete integrator;
   delete model;
+
   t2 = MPI_Wtime();
   if (my_rank==root_process){
     printf( "Elapsed time is %f\n", t2 - t1 );
