@@ -17,7 +17,7 @@ class Grid{
   int GradSq(Grid &grad_sq_T) const;
   double GetMean() const;
   double GetMeanExcludeBorders() const;
-  int WriteToFile(char *fname) const;
+  int WriteToFile(const char *fname) const;
  private:
   const int dimen_x_;                     // dimension of x axis
   const int dimen_y_;                     // dimension of y axis

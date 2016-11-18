@@ -75,7 +75,7 @@ double Grid::GetMean()const {
   return mean;
 }
 
-double Grid::GetMeanExcludeBorder()const {
+double Grid::GetMeanExcludeBorders()const {
   //check i, i in correct range
   //calculate mean temp
   double sum=0;
@@ -84,7 +84,7 @@ double Grid::GetMeanExcludeBorder()const {
       sum+=grid_[i][j];
     }
   }
-  double mean=sum/(dimen_x_*dimen_y_);
+  double mean=sum/((dimen_x_-2)*dimen_y_);
   return mean;
 }
 
@@ -148,7 +148,7 @@ int Grid::GradSq(Grid &grad_sq_T)const  {
 }
 
 
-int Grid::WriteToFile(char *fname) const{
+int Grid::WriteToFile(const char *fname) const{
   FILE *f_out=fopen(fname,"w");
   for(int i=0; i<dimen_x_; i++){
     for(int j=0; j<dimen_y_; j++){

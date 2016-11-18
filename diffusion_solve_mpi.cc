@@ -75,13 +75,13 @@ int main(int argc, char *argv[]) {
   Model *model=new Diffusion(kappa, nside_x, nside_y);
   Grid *T=new Grid(nside_x, nside_y, my_x_min, my_y_min,  my_x_max, my_y_max); //initializes grid to zero
   T->InitializeTEdges();                         //boundary conditions: cos^2(x) and sin^2(x) at opposite edges
-  if (my_rank==root_process){
-    for(int i=0; i<nside_x; i++){
-      for(int j=0; j<nside_y; j++){
-      printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
-      }
-    }
-  }
+  //if (my_rank==root_process){
+  //  for(int i=0; i<nside_x; i++){
+  //    for(int j=0; j<nside_y; j++){
+  //    printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
+  //    }
+  //  }
+  //}
   Integrator *integrator = new Euler(dt, *model);
 
   double t = 0;
@@ -126,9 +126,10 @@ int main(int argc, char *argv[]) {
   //and also because I know that I can combine them really easily in Python using numpy before plotting
   //but if I had more time I would use MPI_IO to write to the same file from each process
   std::stringstream filename;
-  filename << "T_out_nside"<<nside<<"_process" << my_rank  <<  "_numproc" << size << ".txt";
+
+  filename << "OutputDatafiles/T_out_nside"<<nside<<"_process" << my_rank  <<  "_numproc" << size << ".txt";
   T->WriteToFile(filename.str().c_str());
-  double my_mean_temp=T->GetMeanExcludeBorder();
+  double my_mean_temp=T->GetMeanExcludeBorders();
   if (my_rank==root_process){
     printf("The mean temperature for the root process for nside=%4d is: %8.4f \n", nside, my_mean_temp);
   }
