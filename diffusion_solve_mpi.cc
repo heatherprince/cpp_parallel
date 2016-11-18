@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
   double my_y_min=0.;
   double my_y_max=x_max;
   Model *model=new Diffusion(kappa, nside_x, nside_y);
-  Grid *T=new Grid(nside_x, nside_y, my_x_min, my_x_max, my_y_min, my_y_max); //initializes grid to zero
+  Grid *T=new Grid(nside_x, nside_y, my_x_min, my_y_min,  my_x_max, my_y_max); //initializes grid to zero
   T->InitializeTEdges();                         //boundary conditions: cos^2(x) and sin^2(x) at opposite edges
   if (my_rank==root_process){
     for(int i=0; i<nside_x; i++){
@@ -87,13 +87,13 @@ int main(int argc, char *argv[]) {
     //done passing end columns
     t = (i+1) * dt;
   }
-  if (my_rank==root_process){
-    for(int i=0; i<nside_x; i++){
-      for(int j=0; j<nside_y; j++){
-      printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
-      }
-    }
-  }
+  //if (my_rank==root_process){
+  //  for(int i=0; i<nside_x; i++){
+  //    for(int j=0; j<nside_y; j++){
+  //    printf("T i: %4d, j: %4d, T: %5.2f \n",i,j,T->Get(i,j));
+  //    }
+  //  }
+  //}
   if (my_rank==root_process){
     //T_full=new full T grid with data from all nodes
     char filename[] = "T_out.txt";
