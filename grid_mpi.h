@@ -16,6 +16,7 @@ class Grid{
   int AddGridTimesConst(double c, Grid &grid2);
   int GradSq(Grid &grad_sq_T) const;
   double GetMean() const;
+  double GetMeanExcludeBorders() const;
   int WriteToFile(char *fname) const;
  private:
   const int dimen_x_;                     // dimension of x axis

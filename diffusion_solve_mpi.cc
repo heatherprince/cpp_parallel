@@ -3,6 +3,7 @@
 #include <string>
 #include <math.h>
 #include <mpi.h>
+#include <sstream>
 //differential equation
 #include "diffusion.h"
 //solver
@@ -104,7 +105,7 @@ int main(int argc, char *argv[]) {
     T->SetYColumn(0, col_from_prev);
     T->SetYColumn(nside_x-1, col_from_next);
 
-    printf("Time iteration %d out of %d: process %3d sent and updated end columns \n", i, nsteps, my_rank);
+    //printf("Time iteration %d out of %d: process %3d sent and updated end columns \n", i, nsteps, my_rank);
     //done passing end columns
     t = (i+1) * dt;
   }
@@ -115,13 +116,19 @@ int main(int argc, char *argv[]) {
   //    }
   //  }
   //}
-  if (my_rank==root_process){
+  //if (my_rank==root_process){
     //T_full=new full T grid with data from all nodes
-    char filename[] = "T_out.txt";
+    //char filename[] = "T_out.txt";
     //T_full->WriteToFile(filename);
-    T->WriteToFile(filename);
-  }
-  double my_mean_temp=T->GetMean();
+    //T->WriteToFile(filename);
+  //}
+  //I decided to write my files separately so that I could check that the border column swop was working
+  //and also because I know that I can combine them really easily in Python using numpy before plotting
+  //but if I had more time I would use MPI_IO to write to the same file from each process
+  std::stringstream filename;
+  filename << "T_out_nside"<<nside<<"_process" << my_rank  <<  "_numproc" << size << ".txt";
+  T->WriteToFile(filename.str().c_str());
+  double my_mean_temp=T->GetMeanExcludeBorder();
   if (my_rank==root_process){
     printf("The mean temperature for the root process for nside=%4d is: %8.4f \n", nside, my_mean_temp);
   }

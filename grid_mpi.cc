@@ -75,6 +75,19 @@ double Grid::GetMean()const {
   return mean;
 }
 
+double Grid::GetMeanExcludeBorder()const {
+  //check i, i in correct range
+  //calculate mean temp
+  double sum=0;
+  for(int i=1; i<dimen_x_-1; i++){  //exclude first and last y column to get correct mean for each process
+    for(int j=0; j<dimen_y_; j++){
+      sum+=grid_[i][j];
+    }
+  }
+  double mean=sum/(dimen_x_*dimen_y_);
+  return mean;
+}
+
 int Grid::InitializeTEdges(){
   for(int i=0; i<dimen_x_; i++){
     double x=i*dx_+min_x_;
