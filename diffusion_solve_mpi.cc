@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
   const double dt=t_max/nsteps;
   const double dx=x_max/(nside-1);
 
-  int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
+  int my_rank, size, prev, next, buf[2], tag1=1, tag2=2, root_process=0;
   double mean_temp;
 
 
@@ -85,8 +85,8 @@ int main(int argc, char *argv[]) {
     //pass end columns in a ring topology
     MPI_Irecv(&buf[0], 1, MPI_INT, prev, tag1, MPI_COMM_WORLD, &reqs[0]);
     MPI_Irecv(&buf[1], 1, MPI_INT, next, tag2, MPI_COMM_WORLD, &reqs[1]);
-    MPI_Isend(&rank, 1, MPI_INT, prev, tag2, MPI_COMM_WORLD, &reqs[2]);
-    MPI_Isend(&rank, 1, MPI_INT, next, tag1, MPI_COMM_WORLD, &reqs[3]);
+    MPI_Isend(&my_rank, 1, MPI_INT, prev, tag2, MPI_COMM_WORLD, &reqs[2]);
+    MPI_Isend(&my_rank, 1, MPI_INT, next, tag1, MPI_COMM_WORLD, &reqs[3]);
     MPI_Waitall(4, reqs, stats);
 
     printf("I am process %3d and I received from rank %d and rank %d\n", my_rank, buf[0], buf[1]);
