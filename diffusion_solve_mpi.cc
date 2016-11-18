@@ -127,6 +127,7 @@ int main(int argc, char *argv[]) {
   }
   //sum across all processes
   MPI_Reduce(&my_mean_temp, &mean_temp, 1, MPI_DOUBLE, MPI_SUM, root_process, MPI_COMM_WORLD);
+  mean_temp/=size;
   //reduction --> get mean of all different nodes and get master to write it
   if (my_rank==root_process){
     printf("The mean temperature for nside=%4d is: %8.4f \n", nside, mean_temp);
