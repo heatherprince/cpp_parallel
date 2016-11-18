@@ -45,6 +45,23 @@ int Grid::Set(int i, int j, double val){
   return 0;
 }
 
+int Grid::SetYColumn(int i, double *val){
+  //check i, i in correct range
+  for(int j=0; j<dimen_y_; j++){
+    grid_[i][j]=val[j];
+  }
+  return 0;
+}
+
+//i is x index, j is y index
+int Grid::GetYColumn(int i, double *val)const {  //sets val to column
+  //check i, i in correct range
+  for(int j=0; j<dimen_y_; j++){
+    val[j]=grid_[i][j];
+  }
+  return 0;
+}
+
 double Grid::GetMean()const {
   //check i, i in correct range
   //calculate mean temp

@@ -19,7 +19,7 @@ def plot_serial():
     for ns in nside:
         T=np.loadtxt("OutputDatafiles/T_out_nside"+str(ns)+"_serial.txt")
         T_grid=np.transpose(T)
-        plot_T(T_grid, "T calculated in serial for nside="+str(ns), "Plots/T_serial_nside"+str(ns)+".png")
+        plot_T(T_grid, "Serial: T calculated in for nside="+str(ns), "Plots/T_serial_nside"+str(ns)+".png")
 
 def plot_mpi():
     nside=[128,256]#,512]
@@ -38,14 +38,24 @@ def plot_mpi():
                 T_grid[i_min:i_max, :]=data
 
             T_grid=np.transpose(T_grid) #so that x plots on horizontal axis
-            plot_T(T_grid, "T for "+str(npr)+" processor(s), nside="+str(ns), "Plots/T_"+str(npr)+"processors_nside"+str(ns)+".png")
+            plot_T(T_grid, "MPI: T for "+str(npr)+" processor(s), nside="+str(ns), "Plots/T_"+str(npr)+"processors_nside"+str(ns)+".png")
 
 
+def plot_omp():
+    nside=[128]#,512]
+    nthreads=[4]
+
+    for ns in nside:
+        T_grid=np.zeros((ns,ns))
+        for nth in nthreads:
+            T=np.loadtxt("OutputDatafiles/T_out_nside"+str(ns)+"_omp_nthreads"+str(nth)+".txt")
+            T_grid=np.transpose(T) #so that x plots on horizontal axis
+            plot_T(T_grid, "OpenMP: T for "+str(nth)+" thread(s), nside="+str(ns), "Plots/T_"+str(nth)+"threads_nside"+str(ns)+".png")
 
 
 
 
 if __name__=="__main__":
     plot_serial()
-    #plot_omp()
+    plot_omp()
     #plot_mpi()

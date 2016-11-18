@@ -114,6 +114,10 @@ int main(int argc, char *argv[]) {
   delete T;
   delete integrator;
   delete model;
+  delete [] col_from_next;
+  delete [] col_from_prev;
+  delete [] col_for_next;
+  delete [] col_for_prev;
 
   t2 = MPI_Wtime();
   if (my_rank==root_process){
