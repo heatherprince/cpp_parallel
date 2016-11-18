@@ -2,6 +2,5 @@
 hw4.pdf
 *.pyc
 *.o
-*.txt
 heat_serial
 test_grid
