@@ -135,7 +135,7 @@ int Grid::WriteToFile(char *fname) const{
   FILE *f_out=fopen(fname,"w");
   for(int i=0; i<dimen_x_; i++){
     for(int j=0; j<dimen_y_; j++){
-      fprintf(f_out, "%15.8f", grid_[j][i]);
+      fprintf(f_out, "%15.8f", grid_[i][j]);
     }
     fprintf(f_out, "\n");
   }
