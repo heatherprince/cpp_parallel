@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  int my_rank, size;
+
   MPI_Init (&argc, &argv); //initialize MPI library
   MPI_Comm_size(MPI_COMM_WORLD, &size); //get number of processes
   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank); //get my process id
@@ -37,7 +39,7 @@ int main(int argc, char *argv[]) {
   const double dx=x_max/(nside-1);
   double mean_temp;
 
-  int my_rank, size, prev, next, tag1=1, tag2=2, root_process=0;
+  int prev, next, tag1=1, tag2=2, root_process=0;
 
   double *col_for_prev=new double[nside];
   double *col_for_next=new double[nside];
