@@ -63,6 +63,27 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  //test column stuff
+  double *col=new double[nside];
+  T->GetYColumn(0, col);
+  for (int i=0; i<nside; i++){ //iterate over y, x index is 0
+    printf("Column I got at index %d is %5.3f \n", i, col[i]);
+    printf("Value I got directly at index %d is %5.3f \n", i, T->Get(0,i));
+  }
+
+  double * col_new = new double[nside];
+  for (int i=0; i<nside; i++){
+    printf("Setting new column at index %d to %5.3f \n", i, 2.*i);
+    col_new[i]=2*i;
+  }
+
+  T->SetYColumn(0, col_new);
+  for (int i=0; i<nside; i++){ //iterate over y, x index is 0
+    printf("I am reading the column I set at index %d and it is %5.3f \n", i, T->Get(0,i));
+  }
+
+  delete [] col;
+  delete [] col_new;
   delete T;
   delete gradsq;
 

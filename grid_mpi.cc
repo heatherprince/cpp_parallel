@@ -41,14 +41,18 @@ double Grid::Get(int i, int j)const {
 
 int Grid::SetYColumn(int i, double *val){
   //check i, i in correct range
-  grid_[i]=val;
+  for(int j=0; j<dimen_y_; j++){
+    grid_[i][j]=val[j];
+  }
   return 0;
 }
 
 //i is x index, j is y index
 int Grid::GetYColumn(int i, double *val)const {  //sets val to column
   //check i, i in correct range
-  val=grid_[i];
+  for(int j=0; j<dimen_y_; j++){
+    val[j]=grid_[i][j];
+  }
   return 0;
 }
 
