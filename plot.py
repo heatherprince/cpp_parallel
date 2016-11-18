@@ -12,7 +12,7 @@ def plot_serial():
     plt.close()
 
 def plot_mpi():
-    nside=[128]#,256,512]
+    nside=[128,256]#,512]
     nproc=[1,2,4,8,16]
     xymax=np.pi
 
