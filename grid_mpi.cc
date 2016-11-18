@@ -100,30 +100,29 @@ int Grid::AddGridTimesConst(double c, Grid &grid2){
 
 int Grid::GradSq(Grid &grad_sq_T)const  {
   double f;
-  for(int j=0; j<dimen_y_; j++){
-    for(int i=0; i<dimen_x_; i++){
+  for(int i=0; i<dimen_x_; i++){
+    for(int j=0; j<dimen_y_; j++){
       //grad^2 T using finite differences for spatial gradient, 2 or 3 sided differences at corners/edges of grid
       if(i>0 && j>0 && i<dimen_x_-1 && j<dimen_y_-1){
-        f= (grid_[j][i-1]+grid_[j][i+1]+grid_[j-1][i]+grid_[j+1][i]-4*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i+1][j]+grid_[i][j-1]+grid_[i][j+1]-4*grid_[i][j])/(dx_*dx_);
       } else if(i==0 and j==0){ //should I take periodicity into account?
-        f= (grid_[j][i+1]+grid_[j+1][i]-2*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i+1][j]+grid_[i][j+1]-2*grid_[i][j])/(dx_*dx_);
       } else if(i==0 and j==dimen_y_-1){
-        f= (grid_[j][i+1]+grid_[j-1][i]-2*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i+1][j]+grid_[i][j-1]-2*grid_[i][j])/(dx_*dx_);
       } else if(i==dimen_x_-1 and j==0){
-        f= (grid_[j][i-1]+grid_[j+1][i]-2*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i][j+1]-2*grid_[i][j])/(dx_*dx_);
       } else if (i==dimen_x_-1 and j==dimen_y_-1){
-        f= (grid_[j][i-1]+grid_[j-1][i]-2*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i][j-1]-2*grid_[i][j])/(dx_*dx_);
       } else if(i==0){
-        f= (grid_[j][i+1]+grid_[j-1][i]+grid_[j+1][i]-3*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i+1][j]+grid_[i][j-1]+grid_[i][j+1]-3*grid_[i][j])/(dx_*dx_);
       } else if(i==dimen_x_-1){
-        f= (grid_[j][i-1]+grid_[j-1][i]+grid_[j+1][i]-3*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i][j-1]+grid_[i][j+1]-3*grid_[i][j])/(dx_*dx_);
       } else if(j==0){
-        f= (grid_[j][i-1]+grid_[j][i+1]+grid_[j+1][i]-3*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i+1][j]+grid_[i][j+1]-3*grid_[i][j])/(dx_*dx_);
       } else if(j==dimen_y_-1){
-        f= (grid_[j][i-1]+grid_[j][i+1]+grid_[j-1][i]-3*grid_[j][i])/(dx_*dx_);
+        f= (grid_[i-1][j]+grid_[i+1][j]+grid_[i][j-1]-3*grid_[i][j])/(dx_*dx_);
       }
-      printf("gradT i: %4d, j: %4d, T: %5.2f \n",i,j,f);      
-      printf("dx=%5.2f\n", dx_);
+
       grad_sq_T.Set(i,j,f);
     }
   }
@@ -133,8 +132,8 @@ int Grid::GradSq(Grid &grad_sq_T)const  {
 
 int Grid::WriteToFile(char *fname) const{
   FILE *f_out=fopen(fname,"w");
-  for(int j=0; j<dimen_y_; j++){
-    for(int i=0; i<dimen_x_; i++){
+  for(int i=0; i<dimen_x_; i++){
+    for(int j=0; j<dimen_y_; j++){
       fprintf(f_out, "%15.8f", grid_[j][i]);
     }
     fprintf(f_out, "\n");

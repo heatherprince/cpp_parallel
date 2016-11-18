@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctime>
-#include "grid.h"
+#include "grid_mpi.h"
 
 int main(int argc, char *argv[]) {
   if (argc != 2) {
@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 
 
 
-  Grid *T=new Grid(nside, nside, x_max, x_max); //initializes grid to zero
+  Grid *T=new Grid(nside, nside, 0,0,x_max, x_max); //initializes grid to zero
 
 
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  Grid *gradsq=new Grid(nside, nside, x_max, x_max);
+  Grid *gradsq=new Grid(nside, nside, 0,0, x_max, x_max);
 
   T->GradSq(*gradsq);
   for(int j=0; j<nside; j++){
