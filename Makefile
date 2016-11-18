@@ -2,9 +2,10 @@ integrators = euler.o
 equations = diffusion.o
 datatypes_serial = grid.o
 datatypes_omp = grid_omp.o
+datatypes_mpi = grid_mpi.o
 objects = diffusion_solve.o $(integrators) $(equations) $(datatypes_serial)
 objects_omp = diffusion_solve.o $(integrators) $(equations) $(datatypes_omp)
-test_grid_objects = test_grid.o $(datatypes_serial)
+test_grid_objects = test_grid.o $(datatypes_mpi)
 
 CXX=g++-6
 CXXFLAGS = -g -Wall -fopenmp

@@ -24,7 +24,7 @@ Grid::Grid(int nside_x, int nside_y, double x_min, double y_min, double x_max, d
       grid_[i][j]=0.;
     }
   }
-  printf("xmax: %5.2f, ymax: %5.2f", max_x_, max_y_);
+  //printf("xmax: %5.2f, ymax: %5.2f", max_x_, max_y_);
 
 }
 
@@ -76,7 +76,7 @@ int Grid::InitializeTEdges(){
     double x=i*dx_+min_x_;
     grid_[i][0]=cos(x)*cos(x);
     grid_[i][dimen_y_-1]=sin(x)*sin(x);
-    printf("i: %4d, dimen_x: %4d, dx: %5.2f, x_min: %5.2f, x_max: %5.2f, x: %5.2f, (x_max-x_min)/(n_x-1):%5.2f \n",i,dimen_x_,dx_, min_x_, max_x_, x, (max_x_-min_x_)/(dimen_x_-1));
+    //printf("i: %4d, dimen_x: %4d, dx: %5.2f, x_min: %5.2f, x_max: %5.2f, x: %5.2f, (x_max-x_min)/(n_x-1):%5.2f \n",i,dimen_x_,dx_, min_x_, max_x_, x, (max_x_-min_x_)/(dimen_x_-1));
   }
   return 0;
 }
