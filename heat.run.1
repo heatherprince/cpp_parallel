@@ -1,8 +1,8 @@
 #!/bin/bash
-# Parallel job using 8 processors:
+# Parallel job using 1 processors:
 #SBATCH -N 1			# number of nodes
-#SBATCH --ntasks-per-node=8	# processors per node
-#SBATCH -t 0:45:00		# max runtime
+#SBATCH --ntasks-per-node=1	# processors per node
+#SBATCH -t 3:00:00		# max runtime
 #SBATCH --mail-type=begin	# email at start
 #SBATCH --mail-type=end		# and end
 #SBATCH --mail-type=fail	# and in case of failure
@@ -16,7 +16,7 @@ cd ~/cpp_parallel/
 
 for nx in 128 256 512
 do
-    ./heat_omp $nx 8 > heat_omp.$nx.8.out
-    srun ./heat_mpi $nx > heat_mpi.$nx.8.out
+    ./heat_omp $nx 1 > heat_omp.$nx.1.out
+    srun ./heat_mpi $nx > heat_mpi.$nx.1.out
 done
 
