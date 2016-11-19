@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 def plot_T(T_grid, title, saveas):
@@ -9,9 +11,9 @@ def plot_T(T_grid, title, saveas):
     plt.xlabel('x')
     plt.ylabel('y')
     plt.savefig(saveas)
-    plt.show()
+    #plt.show()
     plt.close()
-
+    print "Saved figure in directory Plots"
 
 def plot_serial(nside):
     for ns in nside:
@@ -48,5 +50,5 @@ def plot_omp(nside, nthreads):
 
 if __name__=="__main__":
     plot_serial([128])
-    plot_omp([128], [1,4])
-    plot_mpi([128], [1,4])
+    plot_omp([128], [4, 16])
+    plot_mpi([128], [4, 16])
