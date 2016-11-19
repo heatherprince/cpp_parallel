@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string>
 #include <math.h>
-#include <ctime>
 #include <sstream>
 #include <omp.h>
 //differential equation
@@ -20,7 +19,7 @@ int main(int argc, char *argv[]) {
     printf("USAGE: %s <nx> <nthreads> \n", argv[0]);
     exit(1);
   }
-  time_t start = time(NULL);
+  double t1=omp_get_wtime();
 
   const int nside = atoi(argv[1]);  //check that it is an int
   const int nthreads= atoi(argv[2]);
@@ -65,9 +64,8 @@ int main(int argc, char *argv[]) {
   delete model;
   delete [] col_edge;
 
-  time_t end = time(NULL);
-  double time_s=difftime(end,start);
-  printf("Time elapsed running main of diffusion_solve is: %8.2f seconds \n", time_s);
+  double t2=omp_get_wtime();
+  printf("Time elapsed running main of diffusion_solve_omp is: %8.2f seconds \n", t2-t1);
 
   return 0;
 }
