@@ -7,11 +7,10 @@ objects_omp = diffusion_solve_omp.o $(integrators) $(equations) $(datatypes_omp)
 objects_mpi = diffusion_solve_mpi.o $(integrators) $(equations) $(datatypes)
 test_grid_objects = test_grid.o $(datatypes)
 
-CXX=icpc
+CXX=g++-6
 CXXFLAGS = -g -Wall
-export SHELL:=/bin/bash
 
-heat_omp: CXXFLAGS = -g -Wall -qopenmp
+heat_omp: CXXFLAGS = -g -Wall -fopenmp
 
 heat_mpi: CXX=mpic++
 
@@ -21,7 +20,7 @@ heat_serial : $(objects)
 	$(CXX) -o $@ $^
 
 heat_omp : $(objects_omp)
-	$(CXX) -qopenmp -o $@ $^
+	$(CXX) -fopenmp -o $@ $^
 
 heat_mpi : $(objects_mpi)
 	$(CXX) -o $@ $^
