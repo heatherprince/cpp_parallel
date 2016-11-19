@@ -13,19 +13,13 @@ def plot_T(T_grid, title, saveas):
     plt.close()
 
 
-def plot_serial():
-    nside=[128]
-
+def plot_serial(nside):
     for ns in nside:
         T=np.loadtxt("OutputDatafiles/T_out_nside"+str(ns)+"_serial.txt")
         T_grid=np.transpose(T)
         plot_T(T_grid, "Serial: T calculated for nside="+str(ns), "Plots/T_serial_nside"+str(ns)+".png")
 
-def plot_mpi():
-    nside=[128,256]#,512]
-    nproc=[16,8,4,2,1]
-
-
+def plot_mpi(nside, nproc):
     for ns in nside:
         T_grid=np.zeros((ns,ns))
         for npr in nproc:
@@ -41,10 +35,7 @@ def plot_mpi():
             plot_T(T_grid, "MPI: T for "+str(npr)+" processor(s), nside="+str(ns), "Plots/T_"+str(npr)+"processors_nside"+str(ns)+".png")
 
 
-def plot_omp():
-    nside=[128,256]#,512]
-    nthreads=[16,8,4,2,1]
-
+def plot_omp(nside, nthreads):
     for ns in nside:
         T_grid=np.zeros((ns,ns))
         for nth in nthreads:
@@ -56,6 +47,6 @@ def plot_omp():
 
 
 if __name__=="__main__":
-    plot_serial()
-    plot_omp()
-    plot_mpi()
+    plot_serial([128])
+    plot_omp([128], [1,4])
+    plot_mpi([128], [1,4])

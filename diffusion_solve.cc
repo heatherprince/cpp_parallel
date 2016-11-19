@@ -50,9 +50,8 @@ int main(int argc, char *argv[]) {
   printf("Finished iterating through %d timesteps\n", nsteps);
   //output to file
   std::stringstream filename;
-  filename << "T_out_nside"<<nside<<"_serial.txt";
+  filename << "OutputDatafiles/T_out_nside"<<nside<<"_serial.txt";
   T->WriteToFile(filename.str().c_str());
-  printf("I wrote T to the datafile \n");
 
   double mean_temp=T->GetMean();
   printf("The mean temperature for nside=%4d is: %14.10f \n", nside, mean_temp);

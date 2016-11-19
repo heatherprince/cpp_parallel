@@ -143,18 +143,16 @@ int Grid::GradSq(Grid &grad_sq_T)const  {
 
 int Grid::WriteToFile(const char *fname) const{
   FILE *f_out=fopen(fname,"w");
+  if (f_out == 0){
+    printf("failed to open file\n");
+    return 1;
+  }
   for(int i=0; i<dimen_x_; i++){
     for(int j=0; j<dimen_y_; j++){
       fprintf(f_out, "%15.8f", grid_[i][j]);
     }
     fprintf(f_out, "\n");
   }
-  /* This matches the format numpy reads from but is slower because of accessing memory in non-contiguous order
-  for(int j=0; j<dimen_y_; j++){
-    for(int i=0; i<dimen_x_; i++){
-      fprintf(f_out, "%15.8f", grid_[j][i]);
-    }
-    fprintf(f_out, "\n");
-  }*/
+  fclose(f_out);
   return 0;
 }
