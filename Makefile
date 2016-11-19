@@ -23,7 +23,6 @@ heat_serial : $(objects)
 heat_omp : $(objects_omp)
 	$(CXX) -qopenmp -o $@ $^
 
-
 heat_mpi : $(objects_mpi)
 	$(CXX) -o $@ $^
 
