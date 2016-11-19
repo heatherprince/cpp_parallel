@@ -6,9 +6,9 @@ def plot_T(T_grid, title, saveas):
     plt.imshow(T_grid, origin='lower', extent=[0,xymax,0,xymax])#, cmap='RdBu')
     plt.colorbar()
     plt.title(title)
-    plt.savefig(saveas)
     plt.xlabel('x')
     plt.ylabel('y')
+    plt.savefig(saveas)
     plt.show()
     plt.close()
 
@@ -19,11 +19,11 @@ def plot_serial():
     for ns in nside:
         T=np.loadtxt("OutputDatafiles/T_out_nside"+str(ns)+"_serial.txt")
         T_grid=np.transpose(T)
-        plot_T(T_grid, "Serial: T calculated in for nside="+str(ns), "Plots/T_serial_nside"+str(ns)+".png")
+        plot_T(T_grid, "Serial: T calculated for nside="+str(ns), "Plots/T_serial_nside"+str(ns)+".png")
 
 def plot_mpi():
     nside=[128,256]#,512]
-    nproc=[1,2,4,8,16]
+    nproc=[16,8,4,2,1]
 
 
     for ns in nside:
@@ -42,8 +42,8 @@ def plot_mpi():
 
 
 def plot_omp():
-    nside=[128]#,512]
-    nthreads=[4]
+    nside=[128,256]#,512]
+    nthreads=[16,8,4,2,1]
 
     for ns in nside:
         T_grid=np.zeros((ns,ns))
@@ -58,4 +58,4 @@ def plot_omp():
 if __name__=="__main__":
     plot_serial()
     plot_omp()
-    #plot_mpi()
+    plot_mpi()

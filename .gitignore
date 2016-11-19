@@ -3,4 +3,6 @@ hw4.pdf
 *.pyc
 *.o
 heat_serial
+heat_omp
+heat_mpi
 test_grid
