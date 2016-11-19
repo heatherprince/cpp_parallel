@@ -36,23 +36,23 @@ int main(int argc, char *argv[]) {
 
   Grid *T=new Grid(nside, nside, 0, 0, x_max, x_max);    //initializes grid to zero
   T->InitializeTEdges();                                 //boundary conditions: starts with cos^2(x) and sin^2(x) at opposite edges
-
-  double *col_edge=new double[nside];
+  printf("Initialized T with nside %d\n", nside);
+  //double *col_edge=new double[nside];
 
   double t = 0;
   for (int i = 0; i < nsteps; ++i) {
     integrator->Step(t, *T);
     T->InitializeTEdges(); //maintain BC
-    T->GetYColumn(0, col_edge); //first column
-    T->SetYColumn(nside-1, col_edge);
+    //T->GetYColumn(0, col_edge); //first column
+    //T->SetYColumn(nside-1, col_edge);
     t = (i+1) * dt;
   }
-
+  printf("Finished iterating through %d timesteps\n", nsteps);
   //output to file
   std::stringstream filename;
-  filename << "OutputDatafiles/T_out_nside"<<nside<<"_serial.txt";
+  filename << "T_out_nside"<<nside<<"_serial.txt";
   T->WriteToFile(filename.str().c_str());
-
+  printf("I wrote T to the datafile \n");
 
   double mean_temp=T->GetMean();
   printf("The mean temperature for nside=%4d is: %14.10f \n", nside, mean_temp);
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
   delete T;
   delete integrator;
   delete model;
-  delete [] col_edge;
+  //delete [] col_edge;
 
   time_t end = time(NULL);
   double time_s=difftime(end,start);
