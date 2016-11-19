@@ -46,8 +46,8 @@ int main(int argc, char *argv[]) {
   for (int i = 0; i < nsteps; ++i) {
     integrator->Step(t, *T);
     T->InitializeTEdges(); //maintain BC
-    T->GetYColumn(0, col_edge); //first column
-    T->SetYColumn(nside-1, col_edge);
+    //T->GetYColumn(0, col_edge); //first column
+    //T->SetYColumn(nside-1, col_edge);
     t = (i+1) * dt;
   }
 
